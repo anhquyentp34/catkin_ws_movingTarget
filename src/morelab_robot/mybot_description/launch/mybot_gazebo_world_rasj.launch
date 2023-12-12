@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- define arguments -->
+	<arg name="robot_env" default="ipa-apartment"/>
+	<arg name="pkg_env_config" default="$(find cob_default_env_config)"/>
+	
+	<arg name="paused" default="false"/>
+	<arg name="use_sim_time" default="true"/>
+	<arg name="gui" default="true"/>
+	<arg name="throttled" default="false"/>
+	
+	<!-- Use to set the inital Robot pose in gazebo -->
+	<arg name="x" default="0"/>
+	<arg name="y" default="0"/>
+	<arg name="z" default="0"/>
+	<arg name="roll" default="0"/>
+	<arg name="pitch" default="0"/>
+	<!-- 	
+	<arg name="yaw" default="-0.784900"/> -->
+	<arg name="yaw" default="0"/>
+
+	<!-- upload default configuration parameters 
+	<include file="$(arg pkg_env_config)/upload_navigation_goals.launch">
+		<arg name="robot_env" value="$(arg robot_env)" />
+	</include>
+	-->
+	<include file="$(arg pkg_env_config)/upload_object_locations.launch">
+		<arg name="robot_env" value="$(arg robot_env)" />
+	</include>
+	
+	<!-- startup simulated world -->
+	<include file="$(find cob_gazebo_worlds)/launch/$(arg robot_env).launch">
+		<arg name="paused" value="$(arg paused)" />
+		<arg name="use_sim_time" value="$(arg use_sim_time)" />
+		<arg name="gui" value="$(arg gui)" />
+		<arg name="throttled" value="$(arg throttled)" />
+	</include>
+
+	<!-- put the object into the world -->
+	<node pkg="cob_bringup_sim" type="spawn_object.py" name="spawn_object" args="all" >
+	</node>
+	
+	<!-- startup simulated robot  --> 
+	<param name="robot_description" command="$(find xacro)/xacro.py	'$(find mybot_description)/urdf/mybot.xacro'" />
+
+	<node pkg="joint_state_publisher" name="joint_state_publisher"  type="joint_state_publisher" ></node>
+ 	<node pkg="robot_state_publisher" name="robot_state_publisher"  type="robot_state_publisher" output="screen" >
+		<param name="publish_frequency" type="double" value="20.0" />
+	</node>
+	<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -z 0.1 -model robot_model -x $(arg x) -y $(arg y) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw) " respawn="false" output="screen"/>
+	
+	<!-- -->	
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find mybot_description)/mybot_rasj.rviz" />
+	
+</launch>

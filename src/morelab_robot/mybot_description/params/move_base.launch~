@@ -1,0 +1,19 @@
+<!-- -->
+<launch>
+
+  <!-- Run the map server -->
+   <node name="map_server" pkg="map_server" type="map_server" args="$(find parallax_eddie_platform)/maps/map.yaml" output="screen"/>
+
+  <include file="$(find amcl)/examples/amcl_diff.launch" >
+  </include> 
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find parallax_eddie_platform)/params/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find parallax_eddie_platform)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find parallax_eddie_platform)/params/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find parallax_eddie_platform)/params/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find parallax_eddie_platform)/params/base_local_planner_params.yaml" command="load" />
+  </node>
+
+
+</launch>

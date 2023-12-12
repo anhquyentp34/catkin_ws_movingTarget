@@ -1,0 +1,15 @@
+<!-- -->
+<launch>
+
+	<include file="$(find morelab_robot_description)/launch/morelab_robot_description.launch" />
+	
+	<node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" output="screen"/>
+  	
+	<node pkg="human_skeleton_tracker" name="human_skeleton_display_rviz" type="human_skeleton_display_rviz"/>
+	<!-- -->
+	<node pkg="human_skeleton_tracker" name="multi_human_tracking_node" type="multi_human_tracking_node"/>
+	<node pkg="human_skeleton_tracker" name="subscribe_and_publish_image" type="subscribe_and_publish_image"/>
+
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find mybot_description)/mybot_rasj_real_robot.rviz" />
+
+</launch>

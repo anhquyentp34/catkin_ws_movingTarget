@@ -1,0 +1,13 @@
+<!-- -->
+<launch>
+
+	<include file="$(find morelab_robot_description)/launch/morelab_robot_description.launch" />
+	
+	<node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" output="screen"/>
+  	
+	<!-- 
+	<include file="$(find morelab_robot_platform)/launch/laser_filter.launch" />
+	-->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find mybot_description)/mybot_rasj.rviz" />
+
+</launch>

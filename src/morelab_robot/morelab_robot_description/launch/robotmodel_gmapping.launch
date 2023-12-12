@@ -1,0 +1,35 @@
+<!--             roslaunch parallax_eddie_description robotmodel.launch model:="`rospack find parallax_eddie_description`/urdf/robot2.urdf"
+ -->
+<launch>
+	<arg name="model" />
+	<arg name="gui" default="False" />
+	<param name="robot_description" textfile="$(arg model)" />
+
+	<!--param name="use_gui" value="$(arg gui)"/-->
+	<param name="use_gui" value="True"/>
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+	
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher">
+		<param name="publish_frequency" value="20.0"/>
+    	</node>
+	
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find parallax_eddie_description)/rviz/my_urdf.vcg" />
+	
+	<!-- 
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find urdf_tutorial)/urdf.vcg" />
+	-->
+	<node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node" respawn="false" output="screen">
+
+		<param name="intensity" type="bool" value="false" />
+		<param name="calibrate_time" type="bool" value="false"/>
+                <!--angle ranges from -pi/2 to pi/2 -->
+		<param name="min_ang" type="double" value="-1.57"/>
+		<param name="max_ang" type="double" value="1.57"/>
+	</node>
+
+	<node name="slam_gmapping" pkg="gmapping" type="slam_gmapping">
+		
+	</node>
+	
+
+</launch>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!-- How to run: roslaunch mybot_gazebo mybot_gazebo.launch model:="`rospack find mybot_description`/urdf/mybot.xacro"
+-->
+<launch>
+	<!--	
+	<param name="/use_sim_time" value="true" />
+	<include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+	-->
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+    		<arg name="use_sim_time" value="true"/>
+    		<arg name="debug" value="false"/>
+		<!-- 
+		<arg name="world_name" value="$(find mybot_description)/worlds/social_context.world"/> 	-->	
+		<!-- -->
+    		<arg name="world_name" value="$(find mybot_description)/worlds/morelab_robot.world"/> 
+		<!-- 
+		<arg name="world_name" value="$(find mybot_description)/worlds/check.world"/>
+		-->
+		
+		<!--
+		<arg name="world_name" value="$(find mybot_description)/worlds/morelab_robot_kitchen_dining.world"/>
+		 		
+		<arg name="world_name" value="$(find turtlebot_gazebo)/worlds/playground.world"/> 
+		
+		<arg name="world_name" value="$(find mybot_description)/worlds/mybot.world"/> 
+		--> 
+  	</include>
+
+	<!--arg name="model" /-->
+	<!--param name="robot_description" command="$(find xacro)/xacro.py $(arg model)" /-->
+	<param name="robot_description" command="$(find xacro)/xacro.py	'$(find mybot_description)/urdf/mybot.xacro'" />
+	<node pkg="joint_state_publisher" name="joint_state_publisher"  type="joint_state_publisher" ></node>
+	<!--node pkg="robot_state_publisher" name="robot_state_publisher"  type="state_publisher" output="screen" -->
+ 	<node pkg="robot_state_publisher" name="robot_state_publisher"  type="robot_state_publisher" output="screen" >
+		<param name="publish_frequency" type="double" value="20.0" />
+	</node>
+	<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -z 0.1 -model robot_model" respawn="false" output="screen"/>
+	
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find mybot_description)/mybot.rviz" />
+
+</launch>
+

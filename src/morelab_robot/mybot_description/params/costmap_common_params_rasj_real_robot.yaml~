@@ -1,0 +1,14 @@
+#plugin: []
+obstacle_range: 8.0 # 6.0
+raytrace_range: 8.25 # 6.25
+footprint: [[-0.225,-0.225],[-0.225,0.225], [0.225, 0.225], [0.225,-0.225]]
+robot_radius: 0.225
+inflation_radius: 0.3
+cost_scaling_factor: 20
+#inflation_radius: 0.55
+
+#observation_sources: laser
+obstacle_layer:
+  observation_sources: laser
+  laser: {topic: /scan_filtered, sensor_frame: laser, expected_update_rate: 5, data_type: LaserScan, clearing: true, marking: true}
+
